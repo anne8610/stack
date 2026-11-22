@@ -1,0 +1,30 @@
+{
+  "random_seed": 20261122,
+  "dataset": {
+    "name": "synthetic_stage6_heldout_fixture",
+    "source": "tests/test_bulk_stage6.py::_eval_batch",
+    "donor_ids": ["heldout-a", "heldout-b"],
+    "batch_size": 2,
+    "cells_per_donor": 2,
+    "genes_in_order": ["gene-1", "gene-2", "gene-3"],
+    "cell_counts": [
+      [[2, 1, 1], [1, 3, 2]],
+      [[1, 2, 3], [2, 2, 2]]
+    ],
+    "t_ref": [10.0, 12.0],
+    "scale_target": [1.2, 0.8]
+  },
+  "adapter": {
+    "test_fixture": "TinyAdapter",
+    "initial_multiplier": 0.8
+  },
+  "evaluation": {
+    "sliced_wasserstein_projections": 8,
+    "stack_baseline": "uniform allocation of the target aggregate over cells",
+    "downstream_metric": "set_mae"
+  },
+  "stack_checkpoint": {
+    "repository_file": null,
+    "status": "no original checkpoint present in this worktree"
+  }
+}

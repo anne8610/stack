@@ -121,6 +121,37 @@ class StateICLModelBase(nn.Module):
         nb_mean = px_scale * observed_lib_size
         return nb_mean, nb_dispersion, px_scale
 
+    def encode_unmasked(self, features: torch.Tensor) -> torch.Tensor:
+        """Return per-cell encoder embeddings for an unmasked expression tensor.
+
+        ``features`` contains nonnegative raw counts with shape ``[B, N, G]``.
+        This method applies the same ``log1p`` transform, gene reduction, and
+        attention layers as the regular forward path, but bypasses random gene
+        masking and the expression decoder. Gradients flow through this method
+        to ``features``; callers may freeze model parameters without preventing
+        gradients from reaching an upstream adapter.
+        """
+        if features.ndim != 3:
+            raise ValueError("features must have shape [batch, cells, genes]")
+        if any(size == 0 for size in features.shape):
+            raise ValueError("features must have nonempty batch, cell, and gene dimensions")
+        if features.shape[-1] != self.n_genes:
+            raise ValueError(f"features must have {self.n_genes} genes")
+        if not torch.is_floating_point(features):
+            raise ValueError("features must be a floating-point tensor")
+        if not torch.isfinite(features).all() or torch.any(features < 0):
+            raise ValueError("features must contain finite, nonnegative expression values")
+
+        tokens = self._reduce_and_tokenize(torch.log1p(features))
+        embeddings = self._run_attention_layers(tokens)
+        if isinstance(embeddings, tuple):
+            embeddings = embeddings[0]
+        if not isinstance(embeddings, torch.Tensor) or embeddings.ndim < 3:
+            raise ValueError("attention layers must return per-cell tensor embeddings")
+        if embeddings.shape[:2] != features.shape[:2]:
+            raise ValueError("embedding batch and cell dimensions must match features")
+        return embeddings.reshape(embeddings.shape[0], embeddings.shape[1], -1)
+
     def apply_mask(self, features: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
         batch_size, n_cells, n_genes = features.shape
         device = features.device

@@ -1,6 +1,11 @@
 """Data loading and preprocessing helpers for StateICL."""
 from .datasets import *  # noqa: F401,F403
 from .gene_processing import filter_gene_names, get_gene_names_from_h5, safe_decode_array
+from .bulk import (
+    BulkPseudoBulkDataset,
+    create_bulk_train_val_test_datasets,
+    prepare_bulk_inference_batch,
+)
 from .h5_manager import (
     H5HandleManager,
     get_h5_handle,
@@ -16,6 +21,9 @@ __all__ = sorted(
         "filter_gene_names",
         "get_gene_names_from_h5",
         "safe_decode_array",
+        "BulkPseudoBulkDataset",
+        "create_bulk_train_val_test_datasets",
+        "prepare_bulk_inference_batch",
         "H5HandleManager",
         "get_h5_handle",
         "reset_h5_handle_pool",

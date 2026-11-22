@@ -1,0 +1,42 @@
+{
+  "status": "blocked_before_training",
+  "generated_adapter_checkpoint": null,
+  "generated_profiles": null,
+  "bulk_embeddings": null,
+  "evaluation_metrics": null,
+  "dataset": {
+    "path": "/Users/annemihai/engram/stack/GSE152075/GSE152075_counts.h5ad",
+    "shape_samples_by_genes": [484, 35784],
+    "matrix": "finite, nonnegative, integer-valued counts",
+    "obs_columns": [
+      "geo_accession",
+      "sample_group",
+      "characteristic_sars_cov_2_positivity",
+      "characteristic_n1_ct",
+      "characteristic_age",
+      "characteristic_gender",
+      "characteristic_sequencing_batch"
+    ],
+    "sample_identifier": "geo_accession (484 unique values; one matrix row per value)",
+    "donor_identifier": null,
+    "single_cell_reference_profiles_available": false,
+    "reason": "This file contains bulk sample-by-gene counts, not cell-level profiles. The Stage 1 pseudo-bulk training pipeline requires donor/sample-grouped cells and paired real cell sets for distribution and STACK embedding losses. Treating each bulk row as a cell or splitting its counts into pseudo-cells would fabricate training targets."
+  },
+  "stack_checkpoint": {
+    "path": "/Users/annemihai/engram/stack/Stack-Large/bc_large.ckpt",
+    "sha256": "d388c75891fb26618e6e36054c9819b6a82d6f5bc608baac75994e33ddc8bb81",
+    "modified": false,
+    "model_gene_count": 15012,
+    "ordered_gene_vocabulary_path": "/Users/annemihai/engram/stack/Stack-Large/basecount_1000per_15000max.pkl",
+    "ordered_gene_vocabulary_sha256": "d8761dfda955b9897d3251798b72361ddd0171ef707119eaf65381bed2d85dcc",
+    "ordered_gene_vocabulary_count": 15012,
+    "dataset_gene_intersection": 13634,
+    "checkpoint_genes_missing_from_dataset": 1378
+  },
+  "implementation": {
+    "worktree": "/Users/annemihai/engram/copilot-worktrees/stack/anne8610-special-parakeet",
+    "six_stage_modules_present": true,
+    "end_to_end_training_runner_present": false,
+    "adaptation_run_started": false
+  }
+}
